@@ -7,25 +7,38 @@ def _format_time(arrival_time):
 
 
 class Order:
-    def __init__(self, order_id, client_id, rating, arrival_time, price, quantity):
+    def __init__(
+        self, order_id, client_id, rating, arrival_time, price, quantity, side
+    ):
         self.order_id = order_id
         self.client_id = client_id
         self.rating = rating
         self.arrival_time = _format_time(arrival_time)
         self.price = price
         self.quantity = quantity
+        self.side = side
 
     def __lt__(self, other):
-        """Determines how to compare priority between 2 Order objects"""
+        """Determines how to compare priority between 2 Order objects.
+        Both self and other will be of the same type since they are pre-sorted into both bid and ask lists.
+        """
         if self.price == "Market" and other.price != "Market":
-            return True  # Market orders have higher priority
+            return True  # Market orders have higher priority.
         if self.price != "Market" and other.price == "Market":
             return False
-        return (self.price, self.rating, self.arrival_time) < (
-            other.price,
-            other.rating,
-            other.arrival_time,
-        )
+
+        if self.side == "Sell":
+            return (self.price, self.rating, self.arrival_time) < (
+                other.price,
+                other.rating,
+                other.arrival_time,
+            )
+        else:  # For buy side, we want higher priority for orders with a higher price.
+            return (-self.price, self.rating, self.arrival_time) < (
+                -other.price,
+                other.rating,
+                other.arrival_time,
+            )
 
     def __eq__(self, other):
         return (self.price, self.rating, self.arrival_time) == (
@@ -57,9 +70,8 @@ class OrderQueue:
     def add_ask_order(self, new_ask):
         heappush(self.ask_heap, new_ask)
 
-    def match(self):
-        matches = 0
-        
-        while self.bid_heap:
-            best_bid = heappop(self.bid_heap)
-            print(best_bid)
+    def get_best_bid_order(self):
+        return heappop(self.bid_heap)
+
+    def get_best_ask_order(self):
+        return heappop(self.ask_heap)
