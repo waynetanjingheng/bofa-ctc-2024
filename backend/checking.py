@@ -16,7 +16,6 @@ finalJoin.drop(columns='Client', inplace=True)
 finalJoin.drop(columns='Instrument', inplace=True)  
 failedTrades = pd.DataFrame(columns=['REASON', 'ClientID','Currencies','PositionCheck','Rating','Time','OrderID','Quantity', 'Side', 'InstrumentID', 'Currency', 'LotSize', 'completed_buy'])
 
-# orderid, clientid,  rating, arrival tie, price, quantity, side 
 
 
 passedTrades = pd.DataFrame(columns=['ClientID','Rating','Time','OrderID','Quantity', 'Side', 'InstrumentID', 'Currency', 'LotSize'])
@@ -24,12 +23,12 @@ completed_buys ={} # hash map storing (client, stock): quantity
 
 
 
-for  index,row in finalJoin.iterrows():
-    
+
+def checking(row): 
     if pd.isna(row['InstrumentID']) : 
         row['REASON'] = "REJECTED-INSTRUMENT NOT FOUND"
         failedTrades.loc[len(failedTrades)] =row
-        continue
+        
      
 
     currencySet = set(row['Currencies'].split(',')) if isinstance(row['Currencies'], str) else set()
@@ -37,13 +36,13 @@ for  index,row in finalJoin.iterrows():
     if row['Currency'] not in currencySet:
         row['REASON'] = "REJECTED-MISMATCH CURRENCY"
         failedTrades.loc[len(failedTrades)] =row
-        continue
+        
 
     # check lot size 
     if row['Quantity']% row['LotSize'] != 0: 
         row['REASON'] = "REJECTED-INVALID LOT SIZE"
         failedTrades.loc[len(failedTrades)] =row
-        continue
+        
 
     completedBuys = row["completed_buy"]
     length = len(completedBuys)
@@ -61,19 +60,20 @@ for  index,row in finalJoin.iterrows():
                 pass 
 
             else: 
-
                 
                 row['REASON'] = "REJECTED-POSITION CHECK FAILED"
                 failedTrades.loc[len(failedTrades)] =row
-                continue
+                
         else: 
            
             row['REASON'] = "REJECTED-POSITION CHECK FAILED"
             failedTrades.loc[len(failedTrades)] =row
-            continue
+        
+        passedTrades.loc[len(passedTrades)] =row
+            
         
 
-    passedTrades.loc[len(passedTrades)] =row
+    
     
 
 
@@ -89,5 +89,9 @@ for  index,row in finalJoin.iterrows():
 
 
     
+
+for  index,row in finalJoin.iterrows():
+    
+   
 
 
