@@ -1,26 +1,44 @@
 {
-  "name": "app",
+  "name": "whe",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "flask-dev": "FLASK_DEBUG=1 pip3 install -r backend/requirements.txt && python3 backend/index.py",
+    "next-dev": "next dev",
+    "dev": "concurrently \"yarn next-dev\" \"yarn flask-dev\"",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prettier-check": "prettier --check .",
+    "prettier-write": "prettier --write ."
   },
   "dependencies": {
+    "concurrently": "^8.2.2",
+    "next": "14.2.3",
     "react": "^18",
-    "react-dom": "^18",
-    "next": "14.2.3"
+    "react-dom": "^18"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
+    "@typescript-eslint/eslint-plugin": "6.7.0",
+    "@typescript-eslint/parser": "6.7.0",
     "eslint": "^8",
-    "eslint-config-next": "14.2.3"
+    "eslint-config-next": "14.2.3",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-check-file": "^2.8.0",
+    "eslint-plugin-import": "^2.29.1",
+    "postcss": "^8",
+    "prettier": "^3.2.5",
+    "prettier-plugin-tailwindcss": "^0.5.14",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5",
+    "vercel": "^34.1.11"
+  },
+  "resolutions": {
+    "strip-ansi": "6.0.1"
   }
 }
