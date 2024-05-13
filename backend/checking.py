@@ -17,7 +17,6 @@ finalJoin.drop(columns='Instrument', inplace=True)
 failedTrades = pd.DataFrame(columns=['REASON', 'ClientID','Currencies','PositionCheck','Rating','Time','OrderID','Quantity', 'Side', 'InstrumentID', 'Currency', 'LotSize', 'completed_buy'])
 
 
-
 passedTrades = pd.DataFrame(columns=['ClientID','Rating','Time','OrderID','Quantity', 'Side', 'InstrumentID', 'Currency', 'LotSize'])
 completed_buys ={} # hash map storing (client, stock): quantity
 
@@ -90,7 +89,6 @@ def checking(row):
 
     
 
-for  index,row in finalJoin.iterrows():
     
    
 
