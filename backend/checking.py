@@ -1,8 +1,8 @@
 import pandas as pd
-from trades import add_failed_trade, add_passed_trade, completed_buys
+from trades import add_failed_trade, PassedTrades
 
 
-def check_trade(row: pd.core.series.Series) -> bool:
+def check_trade(row: pd.core.series.Series, passed_trades: PassedTrades) -> bool:
     """Determines if a trade should be rejected or not.
     Failed trades should be added to the failed_trades dataframe.
     Passed trades should be added to the passed_trades dataframe.
@@ -33,8 +33,8 @@ def check_trade(row: pd.core.series.Series) -> bool:
         sell_size = row["Quantity"]
 
         # check hash map
-        if (client, instrument) in completed_buys:
-            buy_size = completed_buys[(client, instrument)]
+        if (client, instrument) in passed_trades.completed_buys:
+            buy_size = passed_trades.completed_buys[(client, instrument)]
             if sell_size <= buy_size:
                 pass
 
@@ -46,8 +46,7 @@ def check_trade(row: pd.core.series.Series) -> bool:
             add_failed_trade(row=row, reason="REJECTED-POSITION CHECK FAILED")
             return False
 
-        add_passed_trade(row=row)
-
+        passed_trades.add_passed_trade(row=row)
         return True
 
 

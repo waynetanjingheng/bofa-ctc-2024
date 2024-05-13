@@ -3,7 +3,7 @@ import pandas as pd
 """Parse the input data, perform the necessary joins, and return the final dataframe."""
 
 
-def get_initial_data():
+def get_initial_data() -> pd.DataFrame:
     clients = pd.read_csv("input_clients.csv")
     orders = pd.read_csv("input_orders.csv")
     instruments = pd.read_csv("input_instruments.csv")
@@ -22,5 +22,7 @@ def get_initial_data():
 
     final_join.drop(columns="Client", inplace=True)
     final_join.drop(columns="Instrument", inplace=True)
+
+    final_join.sort_values("Time") # Ensure that orders arrive in sequence.
 
     return final_join
