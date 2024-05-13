@@ -22,6 +22,11 @@ class Order:
             return True  # Market orders have higher priority.
         if self.price != "Market" and other.price == "Market":
             return False
+        if self.price == "Market" and other.price == "Market":
+            return (self.rating, self.arrival_time) < (
+                other.rating,
+                other.arrival_time,
+            )
 
         if self.side == "Sell":
             return (self.price, self.rating, self.arrival_time) < (

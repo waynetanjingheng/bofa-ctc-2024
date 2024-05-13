@@ -28,6 +28,10 @@ def add_failed_trade(row: pd.core.series.Series, reason: str) -> None:
     failed_trades.loc[len(failed_trades)] = row
 
 
+def get_all_failed_trades() -> pd.DataFrame:
+    return failed_trades
+
+
 class PassedTrades:
 
     def __init__(self):

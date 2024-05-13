@@ -8,6 +8,10 @@ def get_initial_data() -> pd.DataFrame:
     orders = pd.read_csv("input_orders.csv")
     instruments = pd.read_csv("input_instruments.csv")
 
+    CLIENT_RATINGS = {
+        client["ClientID"]: client["Rating"] for _, client in clients.iterrows()
+    }
+
     initial_join = pd.merge(
         clients, orders, how="inner", left_on="ClientID", right_on="Client"
     )
@@ -23,6 +27,6 @@ def get_initial_data() -> pd.DataFrame:
     final_join.drop(columns="Client", inplace=True)
     final_join.drop(columns="Instrument", inplace=True)
 
-    final_join.sort_values("Time") # Ensure that orders arrive in sequence.
+    final_join.sort_values("Time")  # Ensure that orders arrive in sequence.
 
-    return final_join
+    return final_join, CLIENT_RATINGS
